@@ -4,9 +4,9 @@ import sys
 
 class GuiWrapper:
     def __init__(self):
-        self.action = None
-        self._table = "table"
-        self._csv_file = None
+        self.action:str = ""
+        self._table:str = "table"
+        self._csv_file:str = ""
 
     def _get_table(self):
         return self._table
@@ -35,13 +35,32 @@ class GuiWrapper:
         window["-OUTPUT-"].update(values["-IN-"])
         self.set_action(event)
 
+    def validate_prop_vals(self):
+        if not len(self._get_csv_file()):
+            self.raise_error("file")
+        elif not len(self.get_action()):
+            self.raise_error("action")
+        elif not len(self._get_table()):
+            self.raise_error("table")
+        else:
+            print("start program")
+
+    def raise_error(self, *args):
+        sg.Popup("Please run again", f"failed because of {args}")
+        raise SystemExit(f"Please re input information, the failed attributes are: {args}")
+
+    def completion_popup(self):
+        # will remove from this file eventually
+        import PySimpleGUI as sg
+        sg.Popup("completed program", "finished")
+        raise SystemExit("Done")
 
     def logic_loop(self):
         switch_statment = {
             "Display": self.set_final_values,
             "Insert": self.update_action,
             "Update": self.update_action,
-            "Delete": self.update_action
+            "Delete": self.update_action,
         }
         window = self.initalize_runner()
 
@@ -66,9 +85,10 @@ class GuiWrapper:
             [sg.Button("Display"), sg.Button("Exit")],
         ]
         # window
-        return sg.Window("Introduction", layout)
+        return sg.Window("Parser", layout)
 
 
 if __name__ == "__main__":
     gui = GuiWrapper()
     gui.logic_loop()
+    #gui.validate_prop_vals()
