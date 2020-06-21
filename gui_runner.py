@@ -4,9 +4,9 @@ import sys
 
 class GuiWrapper:
     def __init__(self):
-        self.action:str = ""
-        self._table:str = "table"
-        self._csv_file:str = ""
+        self.action: str = ""
+        self._table: str = "table"
+        self._csv_file: str = ""
 
     def _get_table(self):
         return self._table
@@ -36,7 +36,10 @@ class GuiWrapper:
         self.set_action(event)
 
     def validate_prop_vals(self):
-        if not len(self._get_csv_file()):
+        if not (
+            len(self._get_csv_file()) 
+            or self.validate_csv(self._get_csv_file())
+            ):
             self.raise_error("file")
         elif not len(self.get_action()):
             self.raise_error("action")
@@ -47,13 +50,19 @@ class GuiWrapper:
 
     def raise_error(self, *args):
         sg.Popup("Please run again", f"failed because of {args}")
-        raise SystemExit(f"Please re input information, the failed attributes are: {args}")
+        raise SystemExit(
+            f"Please re input information, the failed attributes are: {args}"
+        )
 
     def completion_popup(self):
         # will remove from this file eventually
         import PySimpleGUI as sg
+
         sg.Popup("completed program", "finished")
         raise SystemExit("Done")
+
+    def validate_csv(self, file):
+        return file.split(".")[-1] == "csv"
 
     def logic_loop(self):
         switch_statment = {
@@ -69,7 +78,8 @@ class GuiWrapper:
             apply_switch = switch_statment.get(event, "404")
             apply_switch(window, values, event)
             print(self.action)
-            print(self._get_csv_file())
+            print(self._get_csv_file().split(".")[-1])
+
             print(self._get_table())
 
     def initalize_runner(self):
@@ -91,4 +101,3 @@ class GuiWrapper:
 if __name__ == "__main__":
     gui = GuiWrapper()
     gui.logic_loop()
-    #gui.validate_prop_vals()
