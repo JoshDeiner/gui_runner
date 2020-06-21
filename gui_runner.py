@@ -35,11 +35,13 @@ class GuiWrapper:
         window["-OUTPUT-"].update(values["-IN-"])
         self.set_action(event)
 
+
     def logic_loop(self):
         switch_statment = {
             "Display": self.set_final_values,
             "Insert": self.update_action,
             "Update": self.update_action,
+            "Delete": self.update_action
         }
         window = self.initalize_runner()
 
@@ -55,7 +57,7 @@ class GuiWrapper:
         sg.theme("BluePurple")
         layout = [
             [sg.Text("CSV File", size=(8, 1)), sg.InputText(), sg.FileBrowse()],
-            [sg.Button("Insert"), sg.Button("Update")],
+            [sg.Button("Insert"), sg.Button("Update"), sg.Button("Delete")],
             [
                 sg.Text("Replace your table below if necessary:"),
                 sg.Text(size=(15, 1), key="-OUTPUT-"),
